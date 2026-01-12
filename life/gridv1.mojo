@@ -1,10 +1,10 @@
 @fieldwise_init
-struct Grid(Copyable):
+struct Grid(Copyable, Stringable):
     var rows: Int
     var cols: Int
     var data: List[List[Int]]
 
-    fn grid_str(self) -> String:
+    fn __str__(self) -> String:
         # Create an empty String
         str = String()
 
