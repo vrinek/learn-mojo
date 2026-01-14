@@ -5,8 +5,8 @@ from python import Python
 
 def run_display(
     var grid: Grid,
-    window_height: Int = 1000,
-    window_width: Int = 1000,
+    window_height: Int = 2160,
+    window_width: Int = 3840,
     background_color: String = "black",
     cell_color: String = "green",
     pause: Float64 = 0.1,
@@ -67,5 +67,5 @@ def run_display(
     pygame.quit()
 
 def main():
-    start = Grid.random(128, 128)
+    start = Grid.random(270, 430)
     run_display(start^)
