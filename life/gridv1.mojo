@@ -1,3 +1,5 @@
+import random
+
 @fieldwise_init
 struct Grid(Copyable, Stringable):
     var rows: Int
@@ -25,3 +27,19 @@ struct Grid(Copyable, Stringable):
 
     fn __setitem__(mut self, row: Int, col: Int, value: Int) -> None:
         self.data[row][col] = value
+
+    @staticmethod
+    fn random(rows: Int, cols: Int) -> Self:
+        # Seed the random number generator using the current time.
+        random.seed()
+
+        var data: List[List[Int]] = []
+
+        for _ in range(rows):
+            var row_data: List[Int] = []
+            for _ in range(cols):
+                # Generate a random 0 or 1 and append it to the row.
+                row_data.append(Int(random.random_si64(0, 1)))
+            data.append(row_data^)
+
+        return Self(rows, cols, data^)
