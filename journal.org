@@ -1,0 +1,33 @@
+#+title: Journal for Learning Mojo
+
+* [2026-01-07 Wed]
+
+https://puzzles.modular.com/howto.html
+https://pixi.prefix.dev/latest/
+
+=pixi= installed cleanly on =zweiwerk=, but it detected no supported GPU:
+
+#+begin_example
+Detected Platform: Unknown
+
+No compatible GPU detected or unsupported platform.
+Supported platforms: NVIDIA (CUDA), AMD (ROCm), Apple Silicon (Metal)
+
+PyTorch available: Yes
+CUDA available: False
+MPS available: False
+#+end_example
+
+I see a nixpkg for =pixi=, so I'll try it on =overkill-two= in case it detects that GPU.
+
+* [2026-01-12 Mon]
+
+I have changed my target to the [[https://docs.modular.com/mojo/manual/get-started][Get started with Mojo]] tutorial, which teaches the language's fundamentals.
+
+=^= is a sigil that denotes moving ownership. This reminds me of Rust.
+
+* [2026-01-14 Wed]
+
+Importing a Python package was fun.
+
+One thing I am curious about is why pygame's event polling for keydown is so hit and miss. My gut tells me it has to do with how Mojo controls the loop's timing, but I can't be sure.
