@@ -5,8 +5,8 @@ from python import Python
 
 def run_display(
     var grid: Grid,
-    window_height: Int = 600,
-    window_width: Int = 600,
+    window_height: Int = 1000,
+    window_width: Int = 1000,
     background_color: String = "black",
     cell_color: String = "green",
     pause: Float64 = 0.1,
