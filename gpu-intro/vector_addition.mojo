@@ -7,9 +7,9 @@ fn print_threads():
    """Print thread IDs."""
 
    print("Block index: [",
-       block_idx.x,
+       block_idx.x, block_idx.y, block_idx.z,
        "]\tThread index: [",
-       thread_idx.x,
+       thread_idx.x, thread_idx.y, thread_idx.z,
        "]"
    )
 
@@ -25,7 +25,8 @@ def main():
     else:
         ctx = DeviceContext()
         ctx.enqueue_function[print_threads, print_threads](
-            grid_dim=2, block_dim=64
+            grid_dim=(2, 2, 1),
+            block_dim=(16, 4, 2)
         )
         ctx.synchronize()
         print("Program finished")
