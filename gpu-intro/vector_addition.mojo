@@ -1,5 +1,16 @@
 from gpu.host import DeviceContext
 from sys import has_accelerator
+from gpu import block_idx, thread_idx
+
+fn print_threads():
+   """Print thread IDs."""
+
+   print("Block index: [",
+       block_idx.x,
+       "]\tThread index: [",
+       thread_idx.x,
+       "]"
+   )
 
 def main():
     @parameter
