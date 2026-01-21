@@ -1,7 +1,6 @@
-from sys import has_accelerator, has_apple_gpu_accelerator
+from sys import has_accelerator
 
 from gpu.host import DeviceContext
-from gpu import block_idx, thread_idx
 
 # Vector data type and size
 comptime float_dtype = DType.float32
@@ -28,3 +27,14 @@ def main():
 
         print("LHS buffer: ", lhs_host_buffer)
         print("RHS buffer: ", rhs_host_buffer)
+
+        # Create DeviceBuffers for the input vectors
+        lhs_device_buffer = ctx.enqueue_create_buffer[float_dtype](vector_size)
+        rhs_device_buffer = ctx.enqueue_create_buffer[float_dtype](vector_size)
+
+        # Copy the input vectors from the HostBuffers to the DeviceBuffers
+        ctx.enqueue_copy(dst_buf=lhs_device_buffer, src_buf=lhs_host_buffer)
+        ctx.enqueue_copy(dst_buf=rhs_device_buffer, src_buf=rhs_host_buffer)
+
+        # Create a DeviceBuffer for the result vector
+        result_device_buffer = ctx.enqueue_create_buffer[float_dtype](vector_size)
