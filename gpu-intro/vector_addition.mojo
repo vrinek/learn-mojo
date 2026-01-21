@@ -65,3 +65,23 @@ def main():
         lhs_tensor = LayoutTensor[float_dtype, layout](lhs_device_buffer)
         rhs_tensor = LayoutTensor[float_dtype, layout](rhs_device_buffer)
         result_tensor = LayoutTensor[float_dtype, layout](result_device_buffer)
+
+        # Compile and enqueue the kernel
+        ctx.enqueue_function[vector_addition, vector_addition](
+            lhs_tensor,
+            rhs_tensor,
+            result_tensor,
+            grid_dim=num_blocks,
+            block_dim=block_size,
+        )
+
+        # Create a HostBuffer for the result vector
+        result_host_buffer = ctx.enqueue_create_host_buffer[float_dtype](vector_size)
+
+        # Copy the result vector from the DeviceBuffer to the HostBuffer
+        ctx.enqueue_copy(dst_buf=result_host_buffer, src_buf=result_device_buffer)
+
+        # Finally, synchronize the DeviceContext to run all enqueued operations
+        ctx.synchronize()
+
+        print("Result vector:", result_host_buffer)
