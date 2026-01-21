@@ -3,30 +3,28 @@ from sys import has_accelerator, has_apple_gpu_accelerator
 from gpu.host import DeviceContext
 from gpu import block_idx, thread_idx
 
-fn print_threads():
-   """Print thread IDs."""
+# Vector data type and size
+comptime float_dtype = DType.float32
+comptime vector_size = 1000
 
-   print("Block index: [",
-       block_idx.x, block_idx.y, block_idx.z,
-       "]\tThread index: [",
-       thread_idx.x, thread_idx.y, thread_idx.z,
-       "]"
-   )
 
 def main():
     @parameter
     if not has_accelerator():
         print("No compatible GPU found")
-    elif has_apple_gpu_accelerator():
-        print(
-            "Printing from a kernel is not currently supporten on Apple silicon"
-            " GPUs"
-        )
     else:
+        # Get the context for the attached GPU
         ctx = DeviceContext()
-        ctx.enqueue_function[print_threads, print_threads](
-            grid_dim=(2, 2, 1),
-            block_dim=(16, 4, 2)
-        )
+
+        # Create HostBuffers for input vectors
+        lhs_host_buffer = ctx.enqueue_create_host_buffer[float_dtype](vector_size)
+        rhs_host_buffer = ctx.enqueue_create_host_buffer[float_dtype](vector_size)
         ctx.synchronize()
-        print("Program finished")
+
+        # Initialize the input vectors
+        for i in range(vector_size):
+            lhs_host_buffer[i] = Float32(i)
+            rhs_host_buffer[i] = Float32(i * 0.5)
+
+        print("LHS buffer: ", lhs_host_buffer)
+        print("RHS buffer: ", rhs_host_buffer)
