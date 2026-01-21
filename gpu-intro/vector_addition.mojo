@@ -1,5 +1,7 @@
+from gpu import block_dim, block_idx, thread_idx
 from gpu.host import DeviceContext
 from layout import Layout, LayoutTensor
+from math import ceildiv
 from sys import has_accelerator
 
 # Vector data type and size
@@ -7,6 +9,25 @@ comptime float_dtype = DType.float32
 comptime vector_size = 1000
 
 comptime layout = Layout.row_major(vector_size)
+
+# Calculate the number of thread blocks needed by dividing the vector size
+# by the block size and rounding up
+comptime block_size = 256
+comptime num_blocks = ceildiv(vector_size, block_size)
+
+fn vector_addition(
+    lhs_tensor: LayoutTensor[float_dtype, layout, MutAnyOrigin],
+    rhs_tensor: LayoutTensor[float_dtype, layout, MutAnyOrigin],
+    out_tensor: LayoutTensor[float_dtype, layout, MutAnyOrigin],
+):
+    """Calculate the element-wise sum of two vectors on the GPU."""
+
+    # Calculate the index of the vector element for the thread to process
+    var tid = block_idx.x * block_dim.x + thread_idx.x
+
+    # Don't process out of bound elements
+    if tid < vector_size:
+        out_tensor[tid] = lhs_tensor[tid] + rhs_tensor[tid]
 
 def main():
     @parameter
