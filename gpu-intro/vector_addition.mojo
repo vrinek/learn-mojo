@@ -1,11 +1,12 @@
-from sys import has_accelerator
-
 from gpu.host import DeviceContext
+from layout import Layout, LayoutTensor
+from sys import has_accelerator
 
 # Vector data type and size
 comptime float_dtype = DType.float32
 comptime vector_size = 1000
 
+comptime layout = Layout.row_major(vector_size)
 
 def main():
     @parameter
@@ -38,3 +39,8 @@ def main():
 
         # Create a DeviceBuffer for the result vector
         result_device_buffer = ctx.enqueue_create_buffer[float_dtype](vector_size)
+
+        # Wrap the DeviceBuffers in LayoutTensors
+        lhs_tensor = LayoutTensor[float_dtype, layout](lhs_device_buffer)
+        rhs_tensor = LayoutTensor[float_dtype, layout](rhs_device_buffer)
+        result_tensor = LayoutTensor[float_dtype, layout](result_device_buffer)
